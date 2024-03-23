@@ -2,11 +2,17 @@ import React from 'react'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
+import { useAuth } from '../../context/Auth'
 
 
 const Navbar = () => {
 
     const router = useRouter()
+
+    const [userAuth] = useAuth()
+
+ 
+
 
     return (
         <div className=' bg-primaryBg h-[6rem]  w-full flex justify-center items-center fixed'>
@@ -26,31 +32,33 @@ const Navbar = () => {
                 <div className="navItem w-[40%]">
                     <ul className=' flex w-full justify-between items-center bg-secondaryBg'>
                         <motion.li
-                            initial={{ y:-10}}
-                            animate={{ y:0}}
-                            transition={{ duration: 0.3}}
+                            initial={{ y: -10 }}
+                            animate={{ y: 0 }}
+                            transition={{ duration: 0.3 }}
 
                             className='border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg duration-150 ease-in-out hover:border-primaryBg'>
                             Project
                         </motion.li>
 
                         <motion.li
-                            initial={{ y:-10}}
-                            animate={{ y:0}}
+                            initial={{ y: -10 }}
+                            animate={{ y: 0 }}
                             transition={{ duration: 0.3, delay: 0.3 }}
                             className=' border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg  duration-150 ease-in-out hover:border-primaryBg'>Team</motion.li>
                         <motion.li
-                          initial={{ y:-10}}
-                          animate={{ y:0}}
-                            transition={{ duration: 0.3, delay: 0.5}}
+                            initial={{ y: -10 }}
+                            animate={{ y: 0 }}
+                            transition={{ duration: 0.3, delay: 0.5 }}
                             className=' border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg  duration-150 ease-in-out hover:border-primaryBg'>About</motion.li>
                     </ul>
                 </div>
 
-                <Link href='/Login'>
-                    <div onClick={() => router.push('/Login')} className="loginBtn h-[5rem]  bg-primaryBg px-5 py-2 text-primaryText rounded-200  flex justify-center items-center hover:bg-slate-300 hover:text-primaryBg border-2 border-transparent hover:border-primaryBg cursor-pointer">
-                        <button>Login</button>
+                <Link href={`${userAuth ? '/profile' : 'Login'}`}>
+
+                    <div onClick={() => router.push('/')} className="loginBtn h-[5rem]  bg-primaryBg px-5 py-2 text-primaryText rounded-200  flex justify-center items-center hover:bg-slate-300 hover:text-primaryBg border-2 border-transparent hover:border-primaryBg cursor-pointer">
+                        <button>{`${userAuth ? 'Profile' : 'Login'}`}</button>
                     </div>
+
                 </Link>
 
             </div>

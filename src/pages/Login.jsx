@@ -4,10 +4,12 @@ import { useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { useAuth } from '../../context/Auth'
 
 const Login = () => {
 
     const route = useRouter()
+    const [userAuth, setUserAuth] = useAuth()
 
     // form visiblity state acordinfg to role
     const [form, setForm] = useState(false)
@@ -15,7 +17,7 @@ const Login = () => {
     const [leader, setLeader] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const toast = useToast() 
+    const toast = useToast()
 
 
     const handleLogin = async (e) => {
@@ -48,6 +50,7 @@ const Login = () => {
                     isClosable: true,
                 })
                 localStorage.setItem('auth', JSON.stringify(data.user))
+                setUserAuth({ user: data.user })
                 route.push('/')
             }
             else {

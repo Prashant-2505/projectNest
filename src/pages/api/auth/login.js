@@ -6,6 +6,7 @@ import connectToDb from "../../../../database";
 
 export default async function (req, res) {
     try {
+
         await connectToDb(); // Ensure database connection
 
         const { email, password, leader } = req.body;
