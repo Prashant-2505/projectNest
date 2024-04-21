@@ -269,7 +269,7 @@ const Task = () => {
                                 // all task div
                                 <div className=' h-[50vh] overflow-auto mt-4'>
                                     {projectContext?.task.map((i) => (
-                                        <div className=' bg-slate-200 rounded-md shadow-md shadow:slate-300  py-4 px-2 mb-4'>
+                                        <div key={i?._id} className=' bg-slate-200 rounded-md shadow-md shadow:slate-300  py-4 px-2 mb-4'>
                                             <div className=' flex justify-between'>
                                                 <p className=' font-semibold text-lg'>{i?.name}</p>
                                                 <p>Dead line: <span className=' font-semibold text-md bg-red-500 p-2 rounded-md text-secondaryBg'>{i?.deadLine}</span>
@@ -292,7 +292,7 @@ const Task = () => {
                                     tasksForMember?.length > 0
                                         ?
                                         tasksForMember?.map((task) => (
-                                            <div className=' mb-4  gap-4'>
+                                            <div key={task?._id} className=' mb-4  gap-4'>
                                                 <div className=' flex items-center justify-between mb-4'>
                                                     <p className=' '>Task: <span>{task?.name}</span></p>
                                                     <Checkbox
