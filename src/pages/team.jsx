@@ -21,7 +21,7 @@ import { useProject } from '../../context/ProjectContext';
 import { useAuth } from '../../context/Auth';
 
 
-const team = () => {
+const Team = () => {
 
     // const dummy = [
     //     {
@@ -202,4 +202,4 @@ const team = () => {
     )
 }
 
-export default team
+export default Team

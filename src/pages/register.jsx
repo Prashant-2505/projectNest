@@ -5,7 +5,7 @@ import Link from 'next/link'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 
-const register = () => {
+const Register = () => {
 
     const router = useRouter()
 
@@ -136,4 +136,4 @@ const register = () => {
     )
 }
 
-export default register
+export default Register

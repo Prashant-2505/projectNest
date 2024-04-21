@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 
-const meetRoom = () => {
+const MeetRoom = () => {
     const route = useRouter()
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
@@ -51,4 +51,4 @@ const meetRoom = () => {
     )
 }
 
-export default meetRoom
+export default MeetRoom
