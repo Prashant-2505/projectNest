@@ -11,11 +11,11 @@ const Navbar = () => {
 
     const [userAuth] = useAuth()
 
- 
+
 
 
     return (
-        <div className=' bg-primaryBg h-[6rem]  w-full flex justify-center items-center fixed'>
+        <div className=' bg-primaryBg h-[6rem]  w-full flex justify-center items-center fixed z-50'>
             <div className='bg-secondaryBg  w-[70%] h-[80%] rounded-md shadow-md shadow-slate-950 flex justify-between items-center px-4'>
 
                 <div className="mobileBtn hidden">
@@ -31,25 +31,15 @@ const Navbar = () => {
 
                 <div className="navItem w-[40%]">
                     <ul className=' flex w-full justify-between items-center bg-secondaryBg'>
-                        <motion.li
-                            initial={{ y: -10 }}
-                            animate={{ y: 0 }}
-                            transition={{ duration: 0.3 }}
+                        <Link href='/'>
+                            <li
+                                className='border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg duration-150 ease-in-out hover:border-primaryBg'>
+                                All Project
+                            </li>
+                        </Link>
 
-                            className='border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg duration-150 ease-in-out hover:border-primaryBg'>
-                            Project
-                        </motion.li>
-
-                        <motion.li
-                            initial={{ y: -10 }}
-                            animate={{ y: 0 }}
-                            transition={{ duration: 0.3, delay: 0.3 }}
-                            className=' border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg  duration-150 ease-in-out hover:border-primaryBg'>Team</motion.li>
-                        <motion.li
-                            initial={{ y: -10 }}
-                            animate={{ y: 0 }}
-                            transition={{ duration: 0.3, delay: 0.5 }}
-                            className=' border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg  duration-150 ease-in-out hover:border-primaryBg'>About</motion.li>
+                        <li
+                            className=' border-b-2 border-transparent capitalize cursor-pointer bg-secondaryBg  duration-150 ease-in-out hover:border-primaryBg'>About us</li>
                     </ul>
                 </div>
 

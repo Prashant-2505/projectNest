@@ -41,7 +41,6 @@ const Login = () => {
             const { data } = await axios.post('/api/auth/login', {
                 email, password, leader
             }, config)
-
             if (data.success) {
                 toast({
                     description: data.message,

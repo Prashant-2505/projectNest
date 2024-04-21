@@ -52,12 +52,12 @@ export default async function (req, res) {
                     return res.json({
                         success: true,
                         message: "Login successful",
-                        user: {
-                            email: existingUser.email,
-                            name: existingUser.name,
+                        user:{
                             id: existingUser._id,
-                            leader,
-                            token: token
+                            name:existingUser.name,
+                            email:existingUser.email,
+                            pic:existingUser.pic,
+                            leader
                         }
                     });
                 }

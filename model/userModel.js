@@ -1,10 +1,13 @@
 import mongoose from "mongoose";
 
+
 const userModel = mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    projects: { type: [Object], default: null }, // Specify type as an array of objects
+    projects: {type: [mongoose.Schema.Types.ObjectId], ref: 'ProjectModel',default: null},
+    task: { type: [mongoose.Schema.Types.ObjectId], ref: 'TaskModel',default: null},
+    ticket: { type: [mongoose.Schema.Types.ObjectId], ref: 'TicketModel' ,default: null},
     pic: {
         type: String,
         required: true,

@@ -15,7 +15,7 @@ const register = () => {
     const [pic, setPic] = useState(null)
     const toast = useToast()
 
-    const handleLogin = async (e) => {
+    const handleRegister = async (e) => {
         e.preventDefault()
         if (!email || !password) {
             toast({
@@ -100,7 +100,7 @@ const register = () => {
                         whileHover={{ y: -5 }}
                         transition={{ duration: 0.3 }}
                         className='border-2 border-primaryBg  mb-4 px-8 py-3 cursor-pointer bg-slate-300'
-                        onClick={handleLogin}
+                        onClick={handleRegister}
                     >
                         Submit
                     </motion.button>
