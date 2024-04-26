@@ -11,7 +11,7 @@ const ProjectDetails = ({ projects }) => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }} // Staggered animation
-                className={`w-[100%] flex flex-col justify-center items-center gap-4 p-4  cursor-pointer overflow-scroll`}>
+                className={`w-[100%] flex flex-col justify-center items-center gap-4 p-4  cursor-pointer `}>
               
                 {projects.map((project, index) => (
                     <div

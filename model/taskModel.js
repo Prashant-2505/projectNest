@@ -9,7 +9,8 @@ const taskSchema = new Schema({
     assignedMember: { type: Schema.Types.ObjectId, ref: 'UserModel' }, // Reference to UserModel
     deadLine: { type: String, default: null },
     finishedDate: { type: String, default: "" },
-    complete: { type: Boolean, default: false },
+    complete: { type: String, default: "" },
+    comment: { type: String, default: null },
     priority: {
         type: String,
         enum: ["low", "medium", "high"],

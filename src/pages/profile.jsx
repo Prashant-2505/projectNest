@@ -9,7 +9,6 @@ import { useToast } from '@chakra-ui/react'
 
 const Profile = () => {
     const [userAuth, setUserAuth] = useAuth()
-    console.log(userAuth)
     const router = useRouter()
 
     const toast = useToast()
@@ -69,9 +68,10 @@ const Profile = () => {
 
 
     return (
-        <div className='bg-primaryBg text-primaryText pt-[6rem] min-h-[100vh] w-full'>
-
-            <div className=" w-[100%] h-full flex p-4  gap-4">
+        <div className='bg-primaryBg text-primaryText px-2  min-h-[100vh] w-full pb-8'>
+              <p onClick={()=>router.push('/')}
+              className=' bg-slate-400 inline-block px-4 py-3 rounded-full mt-2 cursor-pointer hover:bg-slate-300 duration-150 hover:text-black'>{"<-"}</p>
+            <div className="  w-[100%] h-full flex p-4  gap-4 ">
                 <div className='w-[100%] h-full flex flex-col gap-4'>
                     {/* image div */}
                     <div className=" h-[15rem] w-[100%] bg-secondaryBg rounded-md flex justify-center items-center ">

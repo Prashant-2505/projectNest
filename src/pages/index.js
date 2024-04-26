@@ -7,12 +7,14 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Spinner, useToast } from "@chakra-ui/react";
 import ProjectDetails from "@/components/ProjectDetails";
+import { useNotification } from "../../context/NotificationContext";
 import { useProject } from "../../context/ProjectContext";
 
 export default function Home() {
   const socket = useSocket();
   const [userAuth] = useAuth();
-  const roomId = uuidv4();
+
+
   const toast = useToast();
   const router = useRouter();
 
@@ -27,16 +29,17 @@ export default function Home() {
 
   useEffect(() => {
     if (socket) {
-      socket.emit('join chat', roomId);
+      socket.emit('join chat', userAuth?.user?.id);
+    } else {
+      console.log('no socket');
     }
-  }, [socket]);
+  }, [socket, userAuth]);
 
 
 
-  //member project
   const fetchMemberProject = async () => {
     try {
-      const response = await fetch(`/api/project/getMemberProject?id=${userAuth?.user?.id}`,{ cache: 'force-cache'  });
+      const response = await fetch(`/api/project/getMemberProject?id=${userAuth?.user?.id}`, { cache: 'force-cache' });
       if (!response.ok) {
         throw new Error('Failed to fetch member projects');
       }
@@ -48,7 +51,7 @@ export default function Home() {
       console.error(error);
     }
   };
-  
+
 
   // work if user is not leader
   useEffect(() => {
@@ -89,9 +92,8 @@ export default function Home() {
       setLoading(false);
     }
   };
-  
-  // work if user is leader 
 
+  // work if user is leader 
   useEffect(() => {
     if (userAuth?.user?.leader) {
       handleProject();
@@ -119,6 +121,16 @@ export default function Home() {
           });
           router.push(`/project?id=${projectId}`);
         } else {
+
+          if (socket) {
+            socket.emit('new member joinded request', {
+              data: {
+                name: userAuth?.user.name,
+                email: userAuth?.user.email,
+              }
+            });
+          }
+
           toast({
             description: data2.message,
             status: 'success',
@@ -164,7 +176,7 @@ export default function Home() {
                   {projectDetails.length > 0 ? (
                     showProject && (
                       <div className="h-[70vh] w-[60%] flex flex-col items-center justify-between ">
-                        <div className="w-full h-full overflow-scroll mt-4 shadow-lg shadow-slate-950">
+                        <div className="w-full h-full overflow-scroll  mt-4 shadow-lg shadow-slate-950">
                           <ProjectDetails projects={projectDetails} />
                         </div>
                         <div className="mt-4">
@@ -196,7 +208,7 @@ export default function Home() {
                 {memberProject?.length > 0 ? (
                   showProject && (
                     <div className="h-[50vh] w-[60%] flex flex-col items-center justify-between ">
-                      <div className="w-full h-full overflow-scroll mt-4 shadow-lg shadow-slate-950">
+                      <div className="w-full h-full overflow-scroll no-scrollbar mt-4 shadow-lg shadow-slate-950">
                         <ProjectDetails projects={memberProject} />
                       </div>
                       <div className="mt-2 flex flex-col justify-between items-center gap-2">

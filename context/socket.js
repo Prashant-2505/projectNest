@@ -15,7 +15,7 @@ export const SocketProvider = (props) => {
 
   useEffect(() => {
     const connection = io();
-    console.log("socket connection")
+    console.log(connection)
     setSocket(connection);
   }, []);
 

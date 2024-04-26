@@ -9,7 +9,7 @@ import { useProject } from '../../context/ProjectContext';
 const Project = () => {
 
     const [projectContext, setProjectContext] = useProject()
-    console.log(projectContext?.task)
+    console.log(projectContext?.member)
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
     const route = useRouter()
@@ -41,11 +41,14 @@ const Project = () => {
             });
 
             const data = await response.json();
+            console.log(data)
             if (data.success) {
                 setProject(data?.existingProject);
                 localStorage.setItem('project', JSON.stringify(data?.existingProject));
+
                 setProjectContext(data?.existingProject)
                 setLoading(false);
+                console.log(projectContext?.member)
             }
             else {
                 
@@ -89,12 +92,12 @@ const Project = () => {
     };
     return (
         <>
-            <div className='pt-[6rem] pl-[10rem] min-h-[100vh] w-full bg-primaryBg pr-6 '>
+            <div className='py-1 pl-[6rem] w-full bg-primaryBg pr-6 overflow-x:hidden no-scrollbar'>
 
                 {/* project header */}
                 {loading
                     ?
-                    <div className=' h-[60vh] w-full flex justify-center items-center'>
+                    <div className=' h-[100vh] w-full flex justify-center items-center'>
                         <Spinner
                             thickness='4px'
                             speed='0.65s'
@@ -107,7 +110,7 @@ const Project = () => {
                     <>
                         <ProjectHeader projectId={id} projectName={project?.name} projectLeaderName={project?.leader?.name} />
 
-                        <div className=' w-full min-h-[50vh] h-full bg-primaryText mt-4 rounded-md p-4'>
+                        <div className=' w-full min-h-[80vh] max-h-[100vh] overflow-scroll no-scrollbar h-full bg-primaryText mt-4 rounded-md p-4'>
                             <h1 className=' font-semibold text-lg'>Project Description :</h1>
                             <p>{project?.description}</p>
 

@@ -36,7 +36,7 @@ const Ticket = () => {
     }, [showProject, showTasks, showTeam, showTickets, showMeetRoom])
 
     return (
-        <div className='pt-[10rem] pl-[10rem] min-h-[100vh] bg-primaryBg'>
+        <div className='pt-[6rem] pl-[10rem] min-h-[100vh] bg-primaryBg'>
             <div className=' text-4xl '>
                 ticket
             </div>

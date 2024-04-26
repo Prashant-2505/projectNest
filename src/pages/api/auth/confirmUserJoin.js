@@ -5,7 +5,6 @@ export default async function GET(req, res) {
     try {
         await connectToDb();
         const { id } = req.query; // Extracting the id parameter from the query
-        console.log(id); // Logging the id to check if it's extracted correctly
         if (!id) {
             return res.json({ error: "Missing project ID" });
         }

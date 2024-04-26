@@ -5,9 +5,19 @@ export default async function POST(req, res) {
     try {
         await connectToDb();
 
-        const { taskId, finishedDate } = req.body;
+        const { taskId, finishedDate, removeSubmitRequest, completion_Date } = req.body;
+        console.log(completion_Date)
+        var task
+        if (removeSubmitRequest) {
+            task = await TaskModel.findByIdAndUpdate(taskId, { finishedDate, comment: null });
+        }
+        if (completion_Date) {
+            task = await TaskModel.findByIdAndUpdate(taskId, { complete: completion_Date, comment: null });
+        }
+        else {
+            task = await TaskModel.findByIdAndUpdate(taskId, { finishedDate });
 
-        const task = await TaskModel.findByIdAndUpdate(taskId, { finishedDate });
+        }
         if (task) {
             return res.json({
                 success: true,

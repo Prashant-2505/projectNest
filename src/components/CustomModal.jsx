@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
     Modal,
     ModalOverlay,
@@ -9,18 +9,38 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 
+
+
 const CustomModal = ({ isOpen, onClose, modalTitle, modalData, updateModalData }) => {
+
+const toast = useToast()
+ 
+
+
     const addUserToProject = async (userMail, projectId) => {
         try {
+            console.log('worked')
             const { data } = await axios.put('/api/member/addMember', { userMail, projectId });
+            console.log(data)
             if (data.success) {
                 // Filter out the user from modalData
                 const updatedData = modalData.filter(user => user.email !== userMail);
                 // Call the function to update modalData in the parent component
                 updateModalData(updatedData);
+            }
+            else
+            {
+                toast({
+                    title: 'Error',
+                    description: data?.message,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true
+                  });
             }
         } catch (error) {
             console.error('Error:', error);

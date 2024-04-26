@@ -9,10 +9,24 @@ module.exports = {
     extend: {
       colors: {
         primaryBg: "#232D3F",
-        secondaryBg:"#EDEAF1",
+        secondaryBg: "#EDEAF1",
         primaryText: "white",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      const newUtilities = {
+        '.no-scrollbar::-webkit-scrollbar': {
+          display: "none",
+        },
+        '.no-scrollbar': {
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+        }
+      };
+
+      addUtilities(newUtilities, ['responsive', 'hover']);
+    }
+  ],
 };

@@ -1,6 +1,4 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import axios from 'axios';
-import { useAuth } from './Auth'; // Import the useAuth hook from your Auth context
 
 const ProjectContext = createContext();
 

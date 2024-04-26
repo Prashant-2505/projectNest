@@ -6,7 +6,6 @@ export default async function GET(req, res) {
         connectToDb();
 
         const projectId = req.query.id; // Access the id directly from req.query
-        console.log(projectId)
         if (!projectId) {
             return res.json({
                 success: false,
@@ -15,8 +14,8 @@ export default async function GET(req, res) {
         }
 
         const members = await UserModel.find({ projects: { $in: [projectId] } })
-            .select('name email _id'); // Specify the fields to select
-
+        .select('name email _id'); // Specify the fields to select
+    
         if (members && members.length > 0) {
             return res.json({
                 success: true,
