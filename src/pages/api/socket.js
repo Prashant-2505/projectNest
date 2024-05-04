@@ -26,20 +26,23 @@ const SocketHandler = (req, res) => {
                 socket.join(userData._id);
             });
 
-            socket.on('join chat', (room) => {
+            socket.on('join room', (room) => {
                 socket.join(room);
                 console.log("user joined " + room);
             });
 
-            socket.on('join member room', (room) => {
-                socket.join(room);
-                console.log("user joined " + room);
-            });
+
 
             socket.on('new member joinded request', (member) => {
                 console.log(member);
                 io.emit('new member joined', member); // Emit to all connected clients
             });
+
+            socket.on('sendMessage', (message) => {
+                socket.emit('messageReceived', message)
+                io.to(message.receiver).emit('messageReceived', message);
+ 
+            })
 
             socket.on('disconnect', () => {
                 console.log("user disconnected");

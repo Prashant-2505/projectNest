@@ -7,8 +7,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Spinner, useToast } from "@chakra-ui/react";
 import ProjectDetails from "@/components/ProjectDetails";
-import { useNotification } from "../../context/NotificationContext";
-import { useProject } from "../../context/ProjectContext";
+import Image from "next/image";
 
 export default function Home() {
   const socket = useSocket();
@@ -153,7 +152,7 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-primaryBg h-[100vh] text-primaryText pt-[6rem]">
+    <div className="bg-primaryBg h-[100vh] text-primaryText ">
       {userAuth
         ?
         (
@@ -258,7 +257,36 @@ export default function Home() {
             </div>
           )
         ) : (
-          <div>not logged in</div>
+          <section className=" h-[100vh] w-full py-12 md:py-0">
+            <div className="container px-4 md:px-6">
+              <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+                <div className="flex flex-col justify-center space-y-4">
+                  <div className="space-y-2">
+                    <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                      Build projects as a team
+                    </h1>
+                    <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
+                      Collaborate with your team on a central platform to bring your projects to life.
+                    </p>
+                  </div>
+                  <Link
+                    href='/Login'
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
+
+                  >
+                    Get Started
+                  </Link>
+                </div>
+                <Image
+                  alt="Hero"
+                  className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
+                  height="540"
+                  src="/mainHero.svg"
+                  width="550"
+                />
+              </div>
+            </div>
+          </section>
         )}
     </div>
   );

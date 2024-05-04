@@ -27,9 +27,6 @@ import { useSocket } from "../../context/socket";
 
 const Team = () => {
     const socket = useSocket();
-    const [teamNotificationContext, setTeamNotificationContext] = useNotification();
-
-
 
     const [projectContext, setProjectContext] = useProject();
     const [userAuth] = useAuth()
@@ -47,9 +44,6 @@ const Team = () => {
     const openModal = () => setIsOpen1(true);
     const closeModal = () => setIsOpen1(false);
 
-
-    const [team, setTeam] = useState([])
-    const [loading, setLoading] = useState(false)
 
     // sidebar states
     const [showProject, setShowProject] = useState(false);
@@ -116,7 +110,7 @@ const Team = () => {
     // real time new user joining notification
     useEffect(() => {
         if (socket) {
-            socket.emit('join chat', userAuth?.user?.id);
+            socket.emit('join room', userAuth?.user?.id);
             socket.on('new member joined', (member) => {
                 try {
                     if (member.data) {
@@ -134,6 +128,23 @@ const Team = () => {
             console.log("no socket")
         }
     }, [socket]);
+
+
+    const createChat = async (receiverId) => {
+        try {
+            const { data } = await axios.post('/api/chatRoom/chat', {
+                chatName: userAuth?.user?.id,
+                isGroupChat: false,
+                users: [userAuth?.user?.id, receiverId]
+            });
+            console.log(data)
+            if (data.success) {
+                route.push(`/chat?chatId=${data?.isChat?._id || data?.fullChat?._id}&receiverId=${receiverId}&id=${id}`);
+            }
+        } catch (error) {
+            console.error("Error creating chat:", error);
+        }
+    };
 
 
 
@@ -161,21 +172,38 @@ const Team = () => {
                     </div>
                 }
 
-                {/* all memeber of project and its assigned atask */}
+                {/* all memeber of project*/}
                 <div>
-                    {projectContext?.member.map((person) => (
-                        <div className=' mt-4 bg-gray-100 flex justify-between items-center rounded-md hover:bg-gray-200 duration-150 ease-in-out  px-2'
-                            key={person.name}>
 
-                            <div className="flex">
-                                <div className=' gap-4 p-2'>
-                                    <p className='font-semibold px-2 rounded-sm'>{person.name}</p>
-                                    <p className=' px-2 rounded-sm'>{person.email}</p>
-                                </div>
+                    <div className='mt-4 bg-gray-300 flex justify-between items-center rounded-md hover:bg-gray-200 duration-150 ease-in-out px-2' >
+                        <div onClick={() => createChat(projectContext?.leader?._id)} className="flex cursor-pointer">
+                            <div className='gap-4 p-2'>
+                                <p className='font-semibold px-2 rounded-sm'>{projectContext?.leader?.name}</p>
+                                <p className='px-2 rounded-sm'>{projectContext?.leader?.email}</p>
                             </div>
-                            {userAuth?.user?.leader && <Trash2 className=' cursor-pointer' />}
                         </div>
-                    ))}
+                    </div>
+
+                    {projectContext?.member.map((person) => {
+                        // Check if the current member is not the same as the current user
+                        if (person._id !== userAuth?.user?.id) {
+                            return (
+                                <div className='mt-4 bg-gray-100 flex justify-between items-center rounded-md hover:bg-gray-200 duration-150 ease-in-out px-2' key={person.name}>
+                                    <div onClick={() => createChat(person?._id)} className="flex cursor-pointer">
+                                        <div className='gap-4 p-2'>
+                                            <p className='font-semibold px-2 rounded-sm'>{person.name}</p>
+                                            <p className='px-2 rounded-sm'>{person.email}</p>
+                                        </div>
+                                    </div>
+                                    {userAuth?.user?.leader && <Trash2 className='cursor-pointer' />}
+                                </div>
+                            );
+                        } else {
+                            // Render nothing if the current member is the same as the current user
+                            return null;
+                        }
+                    })}
+
                 </div>
 
             </div>
