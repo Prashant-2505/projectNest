@@ -281,7 +281,7 @@ export default function Home() {
                   alt="Hero"
                   className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
                   height="540"
-                  src="/mainHero.svg"
+                  src="/Hero.gif"
                   width="550"
                 />
               </div>
