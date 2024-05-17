@@ -48,7 +48,7 @@ const Profile = () => {
             })
             localStorage.removeItem('auth')
             setUserAuth(null)
-            router.push('/Login')
+            router.push('/')
         }
     }
 
