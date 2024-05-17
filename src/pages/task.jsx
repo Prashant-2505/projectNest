@@ -18,13 +18,14 @@ import {
     ModalCloseButton,
 } from '@chakra-ui/react'
 import Link from 'next/link';
+import verifyAuth from '../../middleware/verifyAuth';
 
 const Task = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
 
+    const router = useRouter()
     const toast = useToast()
     const [projectContext, setProjectContext] = useProject();
-    console.log(projectContext?.task)
     const [userAuth] = useAuth()
     const route = useRouter();
     const searchParams = useSearchParams();
@@ -184,18 +185,18 @@ const Task = () => {
     const deleteTask = async (taskId) => {
         try {
             alert(taskId); // Just for testing purposes
-    
+
             const response = await axios.delete(`/api/task/deleteTask?taskId=${taskId}`, {
-                headers: {'Content-Type': 'application/json'}
+                headers: { 'Content-Type': 'application/json' }
             });
-    
+
             console.log(response.data); // Assuming the response contains some data
-    
+
         } catch (error) {
             console.error('Error deleting task:', error);
         }
     }
-    
+
 
     useEffect(() => {
         fetchTask()
@@ -324,11 +325,23 @@ const Task = () => {
 
 
     // check auth
-    // useEffect(() => {
-    //     if (!userAuth?.user) {
-    //         route.push('/Login')
-    //     }
-    // }, [userAuth?.user])
+    useEffect(() => {
+        const fetchData = async () => {
+
+            try {
+                const isValid = await verifyAuth(userAuth?.user);
+                if (isValid && !isValid) {
+                    router.push('/Login');
+                }
+            } catch (error) {
+                router.push('/Login');
+            }
+
+
+        };
+
+        fetchData();
+    }, [userAuth]);
 
 
     return (
@@ -445,7 +458,7 @@ const Task = () => {
                                                         View
                                                     </button>
                                                     <button
-                                                        onClick={()=>deleteTask(projectContext?.task[index]._id)}
+                                                        onClick={() => deleteTask(projectContext?.task[index]._id)}
                                                         className="text-red-500 hover:bg-red-500 hover:text-primaryText hover:border-red-500 border-[1px] p-2 rounded-md border-black duration-150" >
                                                         Delete
                                                     </button>
