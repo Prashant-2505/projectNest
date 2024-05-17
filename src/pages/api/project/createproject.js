@@ -5,8 +5,8 @@ import UserModel from "../../../../model/userModel";
 export default async function POST(req, res) {
     try {
         // Destructure request body
-        const { projectName, projectDescription, projectLeader, projectTech } = req.body;
-
+        const { projectName, projectDescription, projectLink, projectLeader, projectTech } = req.body;
+       console.log(projectLink)
         // Connect to the database
         await connectToDb();
 
@@ -32,7 +32,8 @@ export default async function POST(req, res) {
             name: projectName,
             description: projectDescription,
             leader: projectLeader,
-            tech: projectTech
+            tech: projectTech,
+            link: projectLink
         });
 
         // Update user's projects array

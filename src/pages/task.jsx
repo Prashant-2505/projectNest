@@ -17,7 +17,7 @@ import {
     ModalBody,
     ModalCloseButton,
 } from '@chakra-ui/react'
-import { CircleCheckBig } from 'lucide-react';
+import Link from 'next/link';
 
 const Task = () => {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -52,6 +52,7 @@ const Task = () => {
     const [deadLine, setDeadLine] = useState("")
     const [priority, setPriority] = useState("")
     const [taskComment, setTaskComment] = useState("")
+    const [taskLink, setTaskLink] = useState("")
 
     const [underReview, setUnderReview] = useState(false)
 
@@ -137,7 +138,15 @@ const Task = () => {
 
 
     const addTask = async () => {
-        const { data } = await axios.post('/api/task/addTask', { taskName, taskDescription, assignedMembers, deadLine, priority, projectId: id }, {
+        if (!taskName || !taskDescription || !taskLink || !assignedMembers || !deadLine || !priority) {
+            toast({
+                title: 'Please fill all required fields.',
+                status: 'warning',
+                duration: 3000,
+                isClosable: true,
+            })
+        }
+        const { data } = await axios.post('/api/task/addTask', { taskName, taskDescription, taskLink, assignedMembers, deadLine, priority, projectId: id }, {
             headers: {
                 "Content-Type": "application/json"
             }
@@ -171,6 +180,22 @@ const Task = () => {
             });
         }
     };
+
+    const deleteTask = async (taskId) => {
+        try {
+            alert(taskId); // Just for testing purposes
+    
+            const response = await axios.delete(`/api/task/deleteTask?taskId=${taskId}`, {
+                headers: {'Content-Type': 'application/json'}
+            });
+    
+            console.log(response.data); // Assuming the response contains some data
+    
+        } catch (error) {
+            console.error('Error deleting task:', error);
+        }
+    }
+    
 
     useEffect(() => {
         fetchTask()
@@ -281,8 +306,7 @@ const Task = () => {
                 })
             }));
         }
-        else
-        {
+        else {
             toast({
                 description: "Something went wrong.",
                 status: 'error',
@@ -297,6 +321,15 @@ const Task = () => {
         { value: 'medium', label: 'Medium' },
         { value: 'high', label: 'High' }
     ];
+
+
+    // check auth
+    // useEffect(() => {
+    //     if (!userAuth?.user) {
+    //         route.push('/Login')
+    //     }
+    // }, [userAuth?.user])
+
 
     return (
         <div className="py-2 pl-[6rem] h-[100vh] bg-primaryBg pr-4 overflow-scroll no-scrollbar">
@@ -334,7 +367,17 @@ const Task = () => {
                                     />
 
                                     <div className=' w-full flex items-center gap-2 mt-2'>
-                                        <label >Priority </label>
+                                        <label className='w-[20%]'>Link </label>
+                                        <input
+                                            className=" p-2 rounded-sm  outline-none w-[100%]"
+                                            value={taskLink}
+                                            onChange={(e) => setTaskLink(e.target.value)}
+                                            type="text"
+                                        />
+                                    </div>
+
+                                    <div className=' w-full flex items-center gap-2 mt-2'>
+                                        <label className='w-[20%]'>Priority </label>
                                         <Select className='w-full outline-none'
                                             onChange={(selectedOption) => setPriority(selectedOption.value)}
                                             options={options}
@@ -344,7 +387,7 @@ const Task = () => {
                                     </div>
 
                                     <div className=' w-full flex items-center gap-2 mt-2'>
-                                        <label for="birthday">DeadLine </label>
+                                        <label className='w-[20%]'>DeadLine </label>
                                         <input
                                             className=" p-2 rounded-sm w-[100%] outline-none"
                                             value={deadLine}
@@ -354,7 +397,7 @@ const Task = () => {
                                     </div>
 
                                     <div className=" flex items-center w-full gap-2 mt-2">
-                                        <p className="">Assigned</p>
+                                        <p className=" w-[20%]">Assigned</p>
                                         <div className=" w-full flex justify-center items-center bg-primaryText px-2">
                                             <input
                                                 className=" p-2 rounded-sm w-[100%] outline-none"
@@ -372,7 +415,7 @@ const Task = () => {
                                         <ul  >
                                             {searchResults.map((member) => (
                                                 <li
-                                                    onClick={() => setAssignedMembers(member._id)}
+                                                    onClick={() => { setAssignedMembers(member._id), setSearchQuery(member.name) }}
                                                     className=' bg-red-300 mt-2 py-2 rounded-sm hover:bg-red-400 duration-150 ease-in-out cursor-pointer'
                                                     key={member._id}>{member.name}</li>
                                             ))}
@@ -397,18 +440,19 @@ const Task = () => {
                                                     <p className=" text-gray-400 text-sm">{task?.description}</p>
                                                 </div>
                                                 <div className="flex items-center space-x-2">
-                                                    <Button onClick={() => setShowDetails(index)} size="sm" variant="outline">
+                                                    <button className="text-blue-500 hover:bg-blue-500 hover:text-primaryText hover:border-blue-500 border-[1px] p-2 rounded-md border-black duration-150"
+                                                        onClick={() => setShowDetails(index)} >
                                                         View
-                                                    </Button>
-                                                    <Button className="text-red-500 hover:bg-red-500 hover:text-white" size="sm" variant="outline">
+                                                    </button>
+                                                    <button
+                                                        onClick={()=>deleteTask(projectContext?.task[index]._id)}
+                                                        className="text-red-500 hover:bg-red-500 hover:text-primaryText hover:border-red-500 border-[1px] p-2 rounded-md border-black duration-150" >
                                                         Delete
-                                                    </Button>
-                                                    <Button className="text-yellow-500 hover:bg-yellow-500 hover:text-white" size="sm" variant="outline">
-                                                        Update
-                                                    </Button>
+                                                    </button>
+
                                                 </div>
                                             </div>
-                                            {/* task detsils */}
+                                            {/* task details */}
                                             {showDetails === index && (
                                                 <div className=" w-full bg-gray-50  py-12 px-4 sm:px-6 lg:px-8">
                                                     <div className=" mx-auto space-y-8">
@@ -433,7 +477,7 @@ const Task = () => {
                                                                         <li className="flex items-center justify-between">
                                                                             <span className="text-gray-600 dark:text-gray-400">Status</span>
                                                                             <span className="font-medium text-green-500">
-                                                                                {projectContext?.task[index]?.finishedDate.trim() === "" ? 'Working' : 'Ready for review'}
+                                                                                {projectContext?.task[index]?.finishedDate.trim() === "" ? 'Working' : (projectContext?.task[index]?.complete.trim() !== "" ? 'Complete' : 'Ready for review')}
                                                                             </span>
                                                                         </li>
                                                                         <li className="flex items-center justify-between">
@@ -441,6 +485,10 @@ const Task = () => {
                                                                             <span className="font-medium text-gray-900 dark:text-gray-100">
                                                                                 {projectContext?.task[index]?.complete !== "" ? projectContext?.task[index]?.complete : null}
                                                                             </span>
+                                                                        </li>
+                                                                        <li className="">
+                                                                            <Link blank href={`${projectContext?.task[index].link}`} > <button className=' w-full bg-white py-3'>Link</button>
+                                                                            </Link>
                                                                         </li>
                                                                     </ul>
                                                                 </div>
@@ -451,12 +499,16 @@ const Task = () => {
                                                                     </p>
                                                                 </div>
                                                             </div>
+
                                                             <div className="bg-gray-100 dark:bg-gray-700 px-6 py-4 sm:px-8 sm:py-6 flex justify-between items-center">
-                                                                <button
-                                                                    onClick={() => handleTaskCompletion(projectContext?.task[index]._id)}
-                                                                    className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md">
-                                                                    Mark as Completed
-                                                                </button>
+                                                                {projectContext?.task[index]?.complete.trim() === "" && projectContext?.task[index]?.finishedDate.trim() !== "" &&
+                                                                    <button
+                                                                        onClick={() => handleTaskCompletion(projectContext?.task[index]._id)}
+                                                                        className="bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded-md">
+                                                                        Mark as Completed
+                                                                    </button>
+
+                                                                }
                                                                 <button onClick={() => { onOpen(); setTaskId(task?._id); }}
                                                                     className="bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-600 dark:hover:bg-gray-500 dark:text-gray-200 font-medium py-2 px-4 rounded-md">
                                                                     Add Comment
@@ -478,59 +530,69 @@ const Task = () => {
                                 {
                                     tasksForMember?.length > 0
                                         ?
-                                        tasksForMember?.map((task) => (
-                                            <div key={task?._id} className=' mb-4  gap-4'>
-                                                <div className=' flex items-center justify-between mb-4'>
-                                                    <p className=' '>Task: <span>{task?.name}</span></p>
-                                                    <Checkbox
-                                                        defaultChecked
-                                                        colorScheme='green'
-                                                        isChecked={task?.finishedDate !== " "}
-                                                        onChange={(e) => {
-                                                            setTaskCompleted(e.target.checked);
-                                                            if (e.target.checked) {
-                                                                handleTaskUpdate(task?._id);
+                                        tasksForMember?.map((task, index) => (
+
+                                            <div key={task?._id} className="container mx-auto py-12 px-4 md:px-6 lg:px-8">
+                                                <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+                                                    <div className="col-span-1 md:col-span-2 lg:col-span-3">
+                                                        <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-900">
+                                                            <div className="mb-6">
+                                                                <h1 className="text-2xl font-bold text-primaryText">{task?.name}</h1>
+                                                                <p className="text-gray-500 dark:text-gray-400">
+                                                                    {task?.description}
+                                                                </p>
+                                                            </div>
+                                                            <div className="mb-6 flex items-center space-x-4">
+                                                                <div className="flex items-center space-x-2 text-gray-400">
+                                                                    <Checkbox
+                                                                        defaultChecked
+                                                                        colorScheme='green'
+                                                                        isChecked={task?.finishedDate !== ""}
+                                                                        onChange={(e) => {
+                                                                            setTaskCompleted(e.target.checked);
+                                                                            if (e.target.checked) {
+                                                                                handleTaskUpdate(task?._id);
+                                                                            }
+                                                                        }}
+                                                                    >
+                                                                        {underReview ? "Under Review" : projectContext?.task?.complete ? "Task Completed" : " submit for review"}
+                                                                    </Checkbox>
+                                                                </div>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <CalendarIcon className="h-5 w-5 text-gray-500 dark:text-gray-400" />
+                                                                    <span className="text-gray-500 dark:text-gray-400">{task?.deadLine}</span>
+                                                                </div>
+                                                                <div className="flex items-center space-x-2">
+                                                                    <FlagIcon className="h-5 w-5 text-green-500" />
+                                                                    <span className="text-green-500">{task?.priority}</span>
+                                                                </div>
+                                                            </div>
+                                                            <div className="mb-6">
+                                                                <h2 className="text-lg font-bold text-primaryText">Comments</h2>
+
+                                                                {task?.comment && task?.finishedDate !== " " && (
+                                                                    <div className="mt-4 space-y-4">
+                                                                        <div className="flex items-start space-x-4">
+                                                                            <div>
+                                                                                <p className="text-sm font-medium text-gray-200">Leader</p>
+                                                                                <p className="text-gray-500 dark:text-gray-400">
+                                                                                    {task?.comment}                                                                                </p>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+
+
+
+                                                            </div>
+                                                            {task?.complete &&
+                                                                <div className="flex justify-end w-full">
+                                                                    <Button>task completed</Button>
+                                                                </div>
                                                             }
-                                                        }}
-                                                    >
-                                                        {underReview ? "Under Review" : projectContext?.task?.complete ? "Task Completed" : " submit for review"}
-                                                    </Checkbox>
-
-
-                                                </div>
-                                                <p className=' bg-slate-200 min-h-[5rem] mb-4'>Description: <span className=' font-semibold'>{task?.description}</span></p>
-                                                <div className=' flex items-center gap-4'>
-                                                    <p>Dead line: <span className=' bg-red-500 inline-block  text-secondaryBg p-2 rounded-md text-sm'>{task?.deadLine}</span>
-                                                    </p>
-                                                    <p>
-                                                        Priority:
-                                                        <span className={`${task?.priority === 'high' ? 'bg-red-500' :
-                                                            task?.priority === 'medium' ? 'bg-yellow-600' :
-                                                                'bg-green-400'
-                                                            } inline-block text-secondaryBg p-2 rounded-md text-sm`}>
-                                                            {task?.priority}
-                                                        </span>
-                                                    </p>
-                                                </div>
-
-                                                {task?.comment && task?.finishedDate !== " " && (
-                                                    <div className='mt-2 bg-green-400 py-4'>
-                                                        <p className='bg-green-400 flex items-center gap-4 p-2'>
-                                                            <span><CircleCheckBig /></span> Review has been completed and feedback has been received from the team leader:
-                                                        </p>
-                                                        <p className='text-primaryText p-2 pl-12 font-semibold'>{task?.comment}</p>
-                                                        {task._id && (
-                                                            <button onClick={() => removeSubmitRequest(task._id)}
-                                                                className='text-black p-2 font-semibold bg-slate-200 ml-10 rounded-md'>
-                                                                Remove Submit Request
-                                                            </button>
-                                                        )}
+                                                        </div>
                                                     </div>
-                                                )}
-
-                                                <p>{task?.complete}</p>
-
-
+                                                </div>
                                             </div>
                                         ))
                                         :
@@ -571,46 +633,53 @@ const Task = () => {
                 setShowTickets={setShowTickets}
                 setShowMeetRoom={setShowMeetRoom}
             />
-        </div>
+        </div >
     );
 };
 
+
+function CalendarIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M8 2v4" />
+            <path d="M16 2v4" />
+            <rect width="18" height="18" x="3" y="4" rx="2" />
+            <path d="M3 10h18" />
+        </svg>
+    )
+}
+
+
+function FlagIcon(props) {
+    return (
+        <svg
+            {...props}
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z" />
+            <line x1="4" x2="4" y1="22" y2="15" />
+        </svg>
+    )
+}
+
 export default Task;
 
-{/* <div className=' h-[50vh] overflow-auto mt-4'>
-{projectContext?.task.map((i) => (
-    <div key={i?._id} className=' bg-slate-200 rounded-md shadow-md shadow:slate-300  py-4 px-2 mb-4'>
-        <div className=' flex justify-between'>
-            <p className=' font-semibold text-lg'>{i?.name}</p>
-            <p>Dead line: <span className=' font-semibold text-md bg-red-500 p-2 rounded-md text-secondaryBg'>{i?.deadLine}</span>
-            </p>
-        </div>
-
-        <div className="flex items-center justify-between mt-2">
-            <p>Assigned to : <span className=' font-semibold'>{i?.assignedMember?.name}</span></p>
-            <p>
-                Priority:
-                <span className={`${i?.priority === 'high' ? 'bg-red-500' :
-                    i?.priority === 'medium' ? 'bg-yellow-600' :
-                        'bg-green-400'
-                    } inline-block text-secondaryBg p-2 rounded-md text-sm`}>
-                    {i?.priority}
-                </span>
-            </p>
-        </div>
-        <p>Description:</p>
-        <p className=' bg-slate-100 p-2 my-2'>{i?.description}</p>
-        <p>Status : <span className=' font-semibold'>{i?.finishedDate !== " " ? `finished on ${i?.finishedDate}` : 'working...'}</span></p>
-        <p className=' mt-2'>{i?.finishedDate !== " " && 'Task is Ready for review '}</p>
-
-        {i?.finishedDate !== " " &&
-            <div className="flex items-center justify-between">
-                <p>{'Add comment to task for Assigned member after reviewing'}</p>
-                <button onClick={() => { onOpen(); setTaskId(i._id); }} className='bg-slate-300 rounded-md text-sm p-2 lg:p-2'>Add comment</button>
-            </div>
-        }
-
-
-    </div>
-))}
-</div> */}

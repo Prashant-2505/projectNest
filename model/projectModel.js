@@ -6,10 +6,11 @@ import TaskModel from "./taskModel";
 const projectSchema = mongoose.Schema({
     name: { type: String, required: true },
     leader: { type: mongoose.Schema.Types.ObjectId, ref: UserModel },
-    member: [{ type: mongoose.Schema.Types.ObjectId, ref: UserModel}],
+    member: [{ type: mongoose.Schema.Types.ObjectId, ref: UserModel }],
     description: { type: String, required: true },
+    link: { type: String },
     tech: { type: [String], default: null },
-    task: [{ type: mongoose.Schema.Types.ObjectId, ref: TaskModel}], // Reference to TaskModel
+    task: [{ type: mongoose.Schema.Types.ObjectId, ref: TaskModel }], // Reference to TaskModel
     ticket: { type: [mongoose.Schema.Types.ObjectId], ref: TicketModel },
 },
     { timestamps: true });

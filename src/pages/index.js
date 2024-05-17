@@ -38,7 +38,7 @@ export default function Home() {
 
   const fetchMemberProject = async () => {
     try {
-      const response = await fetch(`/api/project/getMemberProject?id=${userAuth?.user?.id}`, { cache: 'force-cache' });
+      const response = await fetch(`/api/project/getMemberProject?id=${userAuth?.user?.id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch member projects');
       }
@@ -257,36 +257,29 @@ export default function Home() {
             </div>
           )
         ) : (
-          <section className=" h-[100vh] w-full py-12 md:py-0">
-            <div className="container px-4 md:px-6">
-              <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-                <div className="flex flex-col justify-center space-y-4">
-                  <div className="space-y-2">
-                    <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                      Build projects as a team
-                    </h1>
-                    <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-                      Collaborate with your team on a central platform to bring your projects to life.
-                    </p>
-                  </div>
-                  <Link
-                    href='/Login'
-                    className="inline-flex h-10 items-center justify-center rounded-md bg-gray-900 px-8 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gray-900/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300"
-
-                  >
-                    Get Started
-                  </Link>
-                </div>
-                <Image
-                  alt="Hero"
-                  className="mx-auto aspect-video overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
-                  height="540"
-                  src="/Hero.gif"
-                  width="550"
+          <div className=" h-[100vh] w-[100vw]">
+            <div className="flex flex-col md:flex-row h-full w-full justify-between items-center">
+              <div className="   w-[100%] md:w-[50%] flex flex-col gap-10 px-10 w justify-center ">
+                <h1 className=" text-6xl font-bold">
+                  Build projects as a team
+                </h1>
+                <p className=" text-xl">
+                  Collaborate with your team on a central platform to bring your projects to life.
+                </p>
+                <button  onClick={()=>router.push('/Login')}
+                className=" bg-white text-primaryBg py-4 rounded-md hover:opacity-80 duration-150">
+                  Get Started
+                </button>
+              </div>
+              <div className=" flex w-[100%]  md:w-[50%]  items-center justify-center">
+                <img
+                  src={'/Hero.gif'}
+                  className=" h-[100%] w-full"
                 />
+
               </div>
             </div>
-          </section>
+          </div>
         )}
     </div>
   );

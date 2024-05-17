@@ -7,20 +7,21 @@ import { useRouter } from 'next/navigation';
 
 const CreateProject = () => {
     const [userAuth, setUserAuth] = useAuth();
-    console.log(userAuth)
     const [projectName, setProjectName] = useState("");
     const [projectDescription, setProjectDescription] = useState("");
     const [projectTech, setProjectTech] = useState([]);
     const [tech, setTech] = useState("");
+    const [projectLink, setProjectLink] = useState("");
 
-    const projectLeader = userAuth?.user?._id;
+    const projectLeader = userAuth?.user?.id;
+    console.log(userAuth?.user?.id)
 
     const toast = useToast();
     const router = useRouter();
 
     const handleCreateProject = async () => {
         try {
-            if (!projectName || !projectDescription) {
+            if (!projectName || !projectDescription || !projectTech) {
                 toast({
                     description: "Fill all required fields",
                     status: 'warning',
@@ -28,7 +29,7 @@ const CreateProject = () => {
                     isClosable: true,
                 });
             } else {
-                const { data } = await axios.post('/api/project/createproject', { projectName, projectDescription, projectTech, projectLeader },
+                const { data } = await axios.post('/api/project/createproject', { projectName, projectDescription, projectLink, projectTech, projectLeader },
                     {
                         headers: { 'Content-Type': 'application/json' }
                     });
@@ -47,7 +48,7 @@ const CreateProject = () => {
                     });
                     const updatedUser = { ...userAuth.user, projects: [...userAuth.user.projects, data?.newProject?._id] };
                     setUserAuth({ user: updatedUser });
-                    localStorage.setItem('auth', JSON.stringify(updatedUser) )
+                    localStorage.setItem('auth', JSON.stringify(updatedUser))
 
                     router.push('/');
                 } else {
@@ -142,6 +143,7 @@ const CreateProject = () => {
                             onClick={handleAddTech}
                             className='px-2 bg-slate-300 text-primaryBg hover:bg-slate-400'>Add</button>
                     </div>
+
                     <div className=' pb-4'>
                         {projectTech.map((tech, index) => (
                             <div key={index} className="border border-primaryText inline-block p-2 m-1 bg-primaryText text-primaryBg rounded-md">
@@ -150,6 +152,13 @@ const CreateProject = () => {
                         ))}
                     </div>
 
+                    <input
+                        className='border border-primaryText w-full  outline-none px-4 bg-primaryBg text-primaryText h-12'
+                        type="text"
+                        placeholder="Project Link"
+                        value={projectLink}
+                        onChange={(e) => setProjectLink(e.target.value)}
+                    />
                     <textarea
                         className='border border-primaryText w-full  outline-none px-4 bg-primaryBg text-primaryText h-12 '
                         type="text"

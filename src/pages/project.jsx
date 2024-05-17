@@ -5,11 +5,15 @@ import { Spinner, useToast } from '@chakra-ui/react';
 ;
 import ProjectHeader from '@/components/ProjectHeader';
 import { useProject } from '../../context/ProjectContext';
+import { useAuth } from '../../context/Auth';
+import Link from 'next/link';
+import axios from 'axios';
 
 const Project = () => {
 
     const [projectContext, setProjectContext] = useProject()
-    console.log(projectContext?.member)
+    const [userAuth] = useAuth()
+    console.log(userAuth)
     const searchParams = useSearchParams();
     const id = searchParams.get('id');
     const route = useRouter()
@@ -37,11 +41,10 @@ const Project = () => {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({ projectId: id }),
-                
+
             });
 
             const data = await response.json();
-            console.log(data)
             if (data.success) {
                 setProject(data?.existingProject);
                 localStorage.setItem('project', JSON.stringify(data?.existingProject));
@@ -51,7 +54,7 @@ const Project = () => {
                 console.log(projectContext?.member)
             }
             else {
-                
+
                 setLoading(false);
             }
         } catch (error) {
@@ -59,6 +62,18 @@ const Project = () => {
             setLoading(false);
         }
     };
+
+    const deleteProject = async () => {
+        const { data } = await axios.delete(`/api/project/deleteProject?projectId=${id}`)
+        if (data.success) {
+            toast({
+                title: 'Project deleted successfully',
+                status: 'success',
+                duration: 3000,
+                isClosable: true
+            });
+        }
+    }
 
 
 
@@ -90,6 +105,13 @@ const Project = () => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         return new Date(dateString).toLocaleDateString(undefined, options);
     };
+
+    // // check auth
+    // useEffect(() => {
+    //     if (!userAuth?.user) {
+    //         route.push('/Login')
+    //     }
+    // })
     return (
         <>
             <div className='py-1 pl-[6rem] w-full bg-primaryBg pr-6 overflow-x:hidden no-scrollbar'>
@@ -110,9 +132,12 @@ const Project = () => {
                     <>
                         <ProjectHeader projectId={id} projectName={project?.name} projectLeaderName={project?.leader?.name} />
 
-                        <div className=' w-full min-h-[80vh] max-h-[100vh] overflow-scroll no-scrollbar h-full bg-primaryText mt-4 rounded-md p-4'>
+                        <div className=' w-full min-h-[80vh] max-h-[100vh] overflow-scroll no-scrollbar h-full bg-primaryText mt-4 rounded-md p-4 relative '>
                             <h1 className=' font-semibold text-lg'>Project Description :</h1>
                             <p>{project?.description}</p>
+
+                            <h1 className=' font-semibold text-lg'>Project Link :</h1>
+                            <Link href={`${project?.link}`}>{project?.link}</Link>
 
                             <h1 className=' font-semibold text-lg mt-4'>Project Technology :</h1>
                             <div className=" flex gap-4">
@@ -125,7 +150,13 @@ const Project = () => {
                             <h1 className=' font-semibold text-lg mt-4'>Project Starting date :</h1>
                             <p>{formatDate(project?.createdAt)}</p>
 
+                            {userAuth?.user?.leader && <button
+                                onClick={deleteProject}
+                                className=' bg-red-400 text-white w-full py-3 rounded-md absolute bottom-10 left-0'>Delete Project</button>
+
+                            }
                         </div>
+
                     </>
                 }
 

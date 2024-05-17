@@ -1,17 +1,14 @@
 import React from 'react';
-import { ClipboardList, FolderGit, UserRoundSearch, TicketX, Presentation } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 
-const SideBar = ({ setShowProject, setShowTeam, setShowTasks, setShowTickets, setShowMeetRoom }) => {
+const SideBar = ({ setShowProject, setShowTeam, setShowTasks, setShowMeetRoom }) => {
 
     const route = useRouter()
 
-    const handleItemClick = (showProject, showTeam, showTasks, showTickets, showMeetRoom) => {
+    const handleItemClick = (showProject, showTeam, showTasks, showMeetRoom) => {
         setShowProject(showProject);
         setShowTeam(showTeam);
         setShowTasks(showTasks);
-        setShowTickets(showTickets);
         setShowMeetRoom(showMeetRoom);
     };
 
@@ -71,19 +68,7 @@ const SideBar = ({ setShowProject, setShowTeam, setShowTasks, setShowTickets, se
             </div>
 
             <div
-                onClick={() => handleItemClick(false, false, false, true, false)}
-                className="group relative cursor-pointer">
-                <div
-                    className="flex flex-col items-center gap-2 transition-all duration-300 group-hover:translate-x-4">
-                    <TicketIcon className="h-8 w-8 text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50" />
-                    <span className="text-xs font-medium text-gray-500 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-gray-50">
-                        Ticket
-                    </span>
-                </div>
-            </div>
-
-            <div
-                onClick={() => handleItemClick(false, false, false, false, true)}
+                onClick={() => handleItemClick(false, false, false, true)}
                 className="group relative cursor-pointer">
                 <div
                     className="flex flex-col items-center gap-2 transition-all duration-300 group-hover:translate-x-4">

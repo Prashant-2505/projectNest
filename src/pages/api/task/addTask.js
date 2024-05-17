@@ -7,8 +7,8 @@ export default async function POST(req, res) {
         // Establish database connection
         await connectToDb();
 
-        const { taskName, taskDescription, assignedMembers, deadLine,projectId,priority } = req.body;
-
+        const { taskName, taskDescription, assignedMembers, deadLine, projectId, priority, taskLink } = req.body;
+        console.log(taskLink)
         if (!taskDescription || !taskName || !assignedMembers || !projectId || !deadLine || !priority) {
             return res.json({ success: false, message: "Please fill all required fields" });
         }
@@ -26,7 +26,8 @@ export default async function POST(req, res) {
             project: projectId,
             assignedMember: assignedMembers,
             deadLine: deadLine,
-            priority: priority
+            priority: priority,
+            link: taskLink
         });
 
         if (task) {

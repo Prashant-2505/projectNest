@@ -36,9 +36,9 @@ const MeetRoom = () => {
     }, [showProject, showTasks, showTeam, showTickets, showMeetRoom])
 
     return (
-        <div className='pt-[10rem] pl-[10rem] min-h-[100vh] bg-primaryBg'>
-            <div className=' text-4xl '>
-                Meeting room
+        <div className=' min-h-[100vh] bg-primaryBg flex justify-center items-center '>
+            <div className=' text-4xl text-white '>
+              <p> coming soon...</p>
             </div>
 
             <SideBar

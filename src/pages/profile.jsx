@@ -12,6 +12,7 @@ const Profile = () => {
     const router = useRouter()
 
     const toast = useToast()
+    console.log(userAuth?.user)
 
 
     const [name, setName] = useState("")
@@ -25,10 +26,10 @@ const Profile = () => {
         const fetchData = async () => {
             try {
                 // If user is not authenticated, redirect to login page
-                if (!userAuth?.user) {
-                    router.push('/Login');
-                    return; // Exit early to prevent further execution
-                }
+                // if (!userAuth?.user) {
+                //     router.push('/Login');
+                //     return; // Exit early to prevent further execution
+                // }
 
                 // Verify authentication
                 const isValid = await verifyAuth(userAuth?.user);

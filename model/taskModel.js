@@ -7,6 +7,7 @@ const taskSchema = new Schema({
     description: { type: String, required: true },
     project: { type: Schema.Types.ObjectId, ref: 'ProjectModel' }, // Reference to ProjectModel
     assignedMember: { type: Schema.Types.ObjectId, ref: 'UserModel' }, // Reference to UserModel
+    link: { type: String },
     deadLine: { type: String, default: null },
     finishedDate: { type: String, default: "" },
     complete: { type: String, default: "" },

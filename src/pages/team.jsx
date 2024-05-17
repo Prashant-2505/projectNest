@@ -146,7 +146,12 @@ const Team = () => {
         }
     };
 
-
+  // check auth
+//   useEffect(() => {
+//     if (!userAuth?.user) {
+//         route.push('/Login')
+//     }
+// })
 
 
 
@@ -175,14 +180,14 @@ const Team = () => {
                 {/* all memeber of project*/}
                 <div>
 
-                    <div className='mt-4 bg-gray-300 flex justify-between items-center rounded-md hover:bg-gray-200 duration-150 ease-in-out px-2' >
+                    {/* <div className='mt-4 bg-gray-300 flex justify-between items-center rounded-md hover:bg-gray-200 duration-150 ease-in-out px-2' >
                         <div onClick={() => createChat(projectContext?.leader?._id)} className="flex cursor-pointer">
                             <div className='gap-4 p-2'>
                                 <p className='font-semibold px-2 rounded-sm'>{projectContext?.leader?.name}</p>
                                 <p className='px-2 rounded-sm'>{projectContext?.leader?.email}</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {projectContext?.member.map((person) => {
                         // Check if the current member is not the same as the current user
