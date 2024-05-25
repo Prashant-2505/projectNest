@@ -5,6 +5,9 @@ import Link from 'next/link'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../context/Auth'
+import { app } from '@/firebase';
+import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+
 
 const Login = () => {
 
@@ -18,6 +21,56 @@ const Login = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const toast = useToast()
+
+
+    const handleGoogleAuth = async () => {
+        try {
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            const userDetails = {
+                name: user.displayName,
+                email: user.email
+            };
+
+            const config = {
+                headers: {
+                    "Content-type": "application/json"
+                },
+            }
+
+            const { data } = await axios.post('/api/auth/loginByGoogle', {
+                email: user.email, leader
+            }, config)
+            console.log(data.user)
+            console.log(data)
+            if (data.success) {
+                toast({
+                    description: data.message,
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                })
+                localStorage.setItem('auth', JSON.stringify(data.user))
+                setUserAuth({ user: data.user })
+                route.push('/')
+            }
+            else {
+                toast({
+                    description: data.message,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                })
+            }
+
+        } catch (error) {
+            console.error(error);
+            alert('Something went wrong with Google sign-in. Please try again.');
+        }
+    };
 
 
     const handleLogin = async (e) => {
@@ -41,6 +94,7 @@ const Login = () => {
             const { data } = await axios.post('/api/auth/login', {
                 email, password, leader
             }, config)
+            console.log(data.user)
             if (data.success) {
                 toast({
                     description: data.message,
@@ -64,6 +118,8 @@ const Login = () => {
             setPassword("")
         }
     }
+
+
 
     return (
         <div className='bg-primaryBg pt-[6rem] h-[100vh] w-full flex justify-center items-center overflow-hidden'>
@@ -115,11 +171,10 @@ const Login = () => {
 
                 <div className=' w-full'>
                     <motion.button
-                        type="submit"
+                        onClick={handleGoogleAuth}
                         initial={{ opacity: 0 }}
                         animate={form ? { opacity: 1 } : {}} transition={{ duration: 0.4, delay: 0.7 }}
                         className='border-2 border-primaryBg w-full mt-5 mb-4 px-8 py-3 cursor-pointer bg-slate-300'
-                        onClick={handleLogin}
                     >
                         Continue with google
                     </motion.button>

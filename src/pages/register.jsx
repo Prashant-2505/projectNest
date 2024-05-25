@@ -4,6 +4,8 @@ import { useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
+import { app } from '@/firebase';
+import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 
 const Register = () => {
 
@@ -63,6 +65,58 @@ const Register = () => {
         }
     }
 
+    const handleGoogleAuth = async () => {
+        try {
+            const auth = getAuth(app);
+            const provider = new GoogleAuthProvider();
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
+
+            const userDetails = {
+                name: user.displayName,
+                email: user.email
+            };
+
+            console.log(userDetails)
+
+            // Define your axios configuration here
+            const config = {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            };
+
+            const { data } = await axios.post('/api/auth/registerByGoogle',
+                {
+                    name: user.displayName, email: user.email
+                }, config
+            )
+
+            console.log(data)
+            if (data.success) {
+                toast({
+                    description: data.message,
+                    status: 'success',
+                    duration: 3000,
+                    isClosable: true,
+                })
+                router.push('/Login')
+            }
+            else {
+                toast({
+                    description: data.message,
+                    status: 'error',
+                    duration: 3000,
+                    isClosable: true,
+                })
+            }
+            router.push('/Login')
+        } catch (error) {
+            console.error(error);
+            alert('Something went wrong with Google sign-in. Please try again.');
+        }
+    };
+
     return (
         <div className='bg-primaryBg pt-[6rem] h-[100vh] w-full flex justify-center items-center overflow-hidden'>
 
@@ -109,6 +163,7 @@ const Register = () => {
                 {/* auth */}
                 <div className=' w-full'>
                     <motion.button
+                        onClick={handleGoogleAuth}
                         type="submit"
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }} transition={{ duration: 0.4, delay: 0.7 }}
