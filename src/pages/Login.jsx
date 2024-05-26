@@ -6,10 +6,11 @@ import axios from 'axios'
 import { useRouter } from 'next/navigation'
 import { useAuth } from '../../context/Auth'
 import { app } from '@/firebase';
-import { GoogleAuthProvider, getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
 
 
 const Login = () => {
+
 
     const route = useRouter()
     const [userAuth, setUserAuth] = useAuth()
