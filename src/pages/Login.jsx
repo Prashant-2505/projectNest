@@ -21,6 +21,8 @@ const Login = () => {
     const [leader, setLeader] = useState(false)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    const [loading, setLoading] = useState(false)
     const toast = useToast()
 
 
@@ -76,6 +78,7 @@ const Login = () => {
 
     const handleLogin = async (e) => {
         e.preventDefault()
+        setLoading(true);
         if (!email || !password) {
             toast({
                 description: "Please fill all fields",
@@ -83,6 +86,7 @@ const Login = () => {
                 duration: 3000,
                 isClosable: true,
             })
+            setLoading(false);
             return
         } else {
 
@@ -105,6 +109,7 @@ const Login = () => {
                 })
                 localStorage.setItem('auth', JSON.stringify(data.user))
                 setUserAuth({ user: data.user })
+                setLoading(false)
                 route.push('/')
             }
             else {
@@ -114,6 +119,7 @@ const Login = () => {
                     duration: 3000,
                     isClosable: true,
                 })
+                setLoading(false)
             }
             setEmail("")
             setPassword("")
@@ -166,7 +172,7 @@ const Login = () => {
                         className='border-2 border-primaryBg mt-5 mb-4 px-8 py-3 cursor-pointer bg-slate-300'
                         onClick={handleLogin}
                     >
-                        Submit
+                        {loading ? "Loading..." : "Submit"}
                     </motion.button>
                 </motion.form>
 
