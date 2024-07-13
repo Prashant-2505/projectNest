@@ -11,14 +11,14 @@ const Profile = () => {
     const [userAuth, setUserAuth] = useAuth()
     const router = useRouter()
 
-    const toast = useToast()
+    const [loading,setLoading] = useState(false)
+        const toast = useToast()
 
 
 
 
     useEffect(() => {
         const fetchData = async () => {
-
             try {
                 const isValid = await verifyAuth(userAuth?.user);
                 if (isValid && !isValid) {
@@ -37,6 +37,7 @@ const Profile = () => {
 
 
     const handleLogout = async () => {
+        setLoading(true);
         const { data } = await axios.get('api/auth/logout');
         console.log(data)
         if (data.success) {
@@ -48,6 +49,7 @@ const Profile = () => {
             })
             localStorage.removeItem('auth')
             setUserAuth(null)
+            setLoading(false)
             router.push('/')
         }
     }

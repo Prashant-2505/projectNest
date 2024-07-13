@@ -15,10 +15,13 @@ const Register = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [pic, setPic] = useState(null)
+
+    const [loading, setLoading] = useState(false)
     const toast = useToast()
 
     const handleRegister = async (e) => {
         e.preventDefault()
+        setLoading(true)
         if (!email || !password) {
             toast({
                 description: "Please fill all fields",
@@ -26,6 +29,7 @@ const Register = () => {
                 duration: 3000,
                 isClosable: true,
             })
+            setLoading(false)
             return
         } else {
 
@@ -47,6 +51,7 @@ const Register = () => {
                     duration: 3000,
                     isClosable: true,
                 })
+                setLoading(false)
                 router.push('/Login')
             }
             else {
@@ -58,7 +63,7 @@ const Register = () => {
                 })
             }
 
-
+            setLoading(false)
             setEmail("")
             setPassword("")
             setName("")
@@ -156,7 +161,7 @@ const Register = () => {
                         className='border-2 border-primaryBg  mb-4 px-8 py-3 cursor-pointer bg-slate-300'
                         onClick={handleRegister}
                     >
-                        Submit
+                        {loading ? 'Loading...' : 'Submit'}
                     </motion.button>
                 </motion.form>
 
