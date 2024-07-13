@@ -4,15 +4,15 @@ import { useRouter } from 'next/router'
 import verifyAuth from '../../middleware/verifyAuth';
 import axios from 'axios';
 import { motion } from 'framer-motion'
-import { useToast } from '@chakra-ui/react'
+import { Spinner, useToast } from '@chakra-ui/react'
 
 
 const Profile = () => {
     const [userAuth, setUserAuth] = useAuth()
     const router = useRouter()
 
-    const [loading,setLoading] = useState(false)
-        const toast = useToast()
+    const [loading, setLoading] = useState(false)
+    const toast = useToast()
 
 
 
@@ -55,7 +55,7 @@ const Profile = () => {
     }
 
 
- 
+
 
 
 
@@ -105,12 +105,17 @@ const Profile = () => {
 
                             <button onClick={handleLogout}
                                 className=' bg-primaryBg text-primaryText px-4 py-4 rounded-md border-2 hover:border-2 hover:border-primaryBg duration-200 ease-in-out hover:bg-primaryText hover:text-primaryBg'>
-                                Logout
+                                {loading ? <Spinner
+                                    thickness='4px'
+                                    speed='0.65s'
+                                    emptyColor='gray.200'
+                                    color='blue.500'
+                                /> : "Logout"}
                             </button>
 
                         </div>
 
-                  
+
                     </div>
                     {/* about me */}
                     <div className=" h-[20rem] w-[100%] bg-secondaryBg text-primaryBg rounded-md ">

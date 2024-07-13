@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
-import { useToast } from '@chakra-ui/react'
+import { Spinner, useToast } from '@chakra-ui/react'
 import Link from 'next/link'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
@@ -161,7 +161,12 @@ const Register = () => {
                         className='border-2 border-primaryBg  mb-4 px-8 py-3 cursor-pointer bg-slate-300'
                         onClick={handleRegister}
                     >
-                        {loading ? 'Loading...' : 'Submit'}
+                        {loading ? <Spinner
+                            thickness='4px'
+                            speed='0.65s'
+                            emptyColor='gray.200'
+                            color='blue.500'
+                        /> : "Submit"}
                     </motion.button>
                 </motion.form>
 

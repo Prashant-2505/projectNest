@@ -266,7 +266,7 @@ export default function Home() {
                 <p className=" text-xl">
                   Collaborate with your team on a central platform to bring your projects to life.
                 </p>
-                <button  onClick={()=>router.push('/Login')}
+                <button  onClick={()=>router.push('/dummyPage')}
                 className=" bg-white text-primaryBg py-4 rounded-md hover:opacity-80 duration-150">
                   Get Started
                 </button>

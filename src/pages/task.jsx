@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Search } from 'lucide-react';
 import axios from 'axios';
 import { useProject } from '../../context/ProjectContext';
-import { Button, Checkbox, useDisclosure, useToast } from '@chakra-ui/react'
+import { Button, Checkbox, Spinner, useDisclosure, useToast } from '@chakra-ui/react'
 import { useAuth } from '../../context/Auth';
 import moment from 'moment';
 import Select from 'react-select';
@@ -60,7 +60,9 @@ const Task = () => {
     const [taskCompleted, setTaskCompleted] = useState(projectContext?.task?.finishedDate ? true : false)
 
 
-    const [showDetails, setShowDetails] = useState()
+    const [showDetails, setShowDetails] = useState(null)
+
+    const [loading, setLoading] = useState(false)
 
     const handleTaskUpdate = async (id) => {
         try {
@@ -139,6 +141,7 @@ const Task = () => {
 
 
     const addTask = async () => {
+        setLoading(true);
         if (!taskName || !taskDescription || !taskLink || !assignedMembers || !deadLine || !priority) {
             toast({
                 title: 'Please fill all required fields.',
@@ -146,6 +149,8 @@ const Task = () => {
                 duration: 3000,
                 isClosable: true,
             })
+            setLoading(false)
+            setCreateTask(false)
         }
         const { data } = await axios.post('/api/task/addTask', { taskName, taskDescription, taskLink, assignedMembers, deadLine, priority, projectId: id }, {
             headers: {
@@ -161,6 +166,16 @@ const Task = () => {
             })
 
             setFetchTaskFlag(!fetchTaskFlag)
+            setLoading(false)
+            setCreateTask(false)
+
+            // resting task state
+            setTaskName("")
+            setTaskDescription("")
+            setTaskLink("")
+            setPriority("")
+            setDeadLine("")
+            setAssignedMembers("")
         }
     }
 
@@ -184,16 +199,23 @@ const Task = () => {
 
     const deleteTask = async (taskId) => {
         try {
-            alert(taskId); // Just for testing purposes
+            // For testing purposes, you can use console.log instead of alert
 
+            // Send delete request to the server using axios
             const response = await axios.delete(`/api/task/deleteTask?taskId=${taskId}`, {
                 headers: { 'Content-Type': 'application/json' }
             });
 
-            console.log(response.data); // Assuming the response contains some data
+            setProjectContext(prevContext => ({
+                ...prevContext,
+                task: prevContext.task.filter(task => task._id !== taskId)
+            }));
+
+            // Optionally, you can perform any other updates or UI changes here
 
         } catch (error) {
             console.error('Error deleting task:', error);
+            // Handle error, show a message, or perform any necessary actions
         }
     }
 
@@ -318,7 +340,7 @@ const Task = () => {
     }
 
     const options = [
-        { value: 'easy', label: 'Easy' },
+        { value: 'low', label: 'Low' },
         { value: 'medium', label: 'Medium' },
         { value: 'high', label: 'High' }
     ];
@@ -437,7 +459,13 @@ const Task = () => {
 
                                     <button
                                         onClick={addTask}
-                                        className=" bg-primaryBg text-primaryText px-8 py-2 rounded mt-4">Enter</button>
+                                        className=" bg-primaryBg text-primaryText px-8 py-2 rounded mt-4">
+                                        {loading ? <Spinner
+                                            thickness='4px'
+                                            speed='0.65s'
+                                            emptyColor='gray.200'
+                                            color='blue.500'
+                                        /> : "Enter"}</button>
                                 </div>
                             )
                             :

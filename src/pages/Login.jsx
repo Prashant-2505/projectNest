@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '../../context/Auth'
 import { app } from '@/firebase';
 import { GoogleAuthProvider, getAuth, signInWithPopup } from "firebase/auth";
-
+import { Spinner } from '@chakra-ui/react'
 
 const Login = () => {
 
@@ -172,7 +172,12 @@ const Login = () => {
                         className='border-2 border-primaryBg mt-5 mb-4 px-8 py-3 cursor-pointer bg-slate-300'
                         onClick={handleLogin}
                     >
-                        {loading ? "Loading..." : "Submit"}
+                        {loading ? <Spinner
+                            thickness='4px'
+                            speed='0.65s'
+                            emptyColor='gray.200'
+                            color='blue.500'
+                        /> : "Submit"}
                     </motion.button>
                 </motion.form>
 
