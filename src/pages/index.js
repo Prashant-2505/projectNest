@@ -175,7 +175,7 @@ export default function Home() {
                   {projectDetails.length > 0 ? (
                     showProject && (
                       <div className="h-[70vh] w-[60%] flex flex-col items-center justify-between ">
-                        <div className="w-full h-full overflow-scroll  mt-4 shadow-lg shadow-slate-950">
+                        <div className="w-full h-full overflow-scroll  mt-4 shadow-lg shadow-slate-950 hide-scrollbar">
                           <ProjectDetails projects={projectDetails} />
                         </div>
                         <div className="mt-4">

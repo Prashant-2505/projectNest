@@ -15,18 +15,16 @@ module.exports = {
     },
   },
   plugins: [
-    function ({ addUtilities }) {
-      const newUtilities = {
-        '.no-scrollbar::-webkit-scrollbar': {
-          display: "none",
+    function({ addUtilities }) {
+      addUtilities({
+        '.hide-scrollbar': {
+          /* Hide scrollbars in WebKit-based browsers */
+          '::-webkit-scrollbar': { display: 'none' },
+          /* Hide scrollbars in Firefox */
+          '-ms-overflow-style': 'none', /* IE and Edge */
+          'scrollbar-width': 'none', /* Firefox */
         },
-        '.no-scrollbar': {
-          '-ms-overflow-style': 'none',
-          'scrollbar-width': 'none',
-        }
-      };
-
-      addUtilities(newUtilities, ['responsive', 'hover']);
-    }
+      })
+    },
   ],
-};
+}

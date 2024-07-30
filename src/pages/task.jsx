@@ -367,7 +367,7 @@ const Task = () => {
 
 
     return (
-        <div className="py-2 pl-[6rem] h-[100vh] bg-primaryBg pr-4 overflow-scroll no-scrollbar">
+        <div className="py-2 pl-[6rem] h-[100vh] bg-primaryBg pr-4 overflow-scroll hide-scrollbar">
 
 
             <div className=" min-h-[100vh] wfull bg-primaryText p-4 rounded-md">

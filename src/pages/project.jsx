@@ -132,7 +132,7 @@ const Project = () => {
                     <>
                         <ProjectHeader projectId={id} projectName={project?.name} projectLeaderName={project?.leader?.name} />
 
-                        <div className=' w-full min-h-[80vh] max-h-[100vh] overflow-scroll no-scrollbar h-full bg-primaryText mt-4 rounded-md p-4 relative '>
+                        <div className=' w-full min-h-[80vh] max-h-[100vh] overflow-scroll hide-scrollbar h-full bg-primaryText mt-4 rounded-md p-4 relative '>
                             <h1 className=' font-semibold text-lg'>Project Description :</h1>
                             <p>{project?.description}</p>
 

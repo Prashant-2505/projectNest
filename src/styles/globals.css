@@ -11,3 +11,8 @@
 body {
     background-color: #3d3d3d;
 }
+
+/* Hide scrollbars in Chrome, Safari, and other WebKit-based browsers */
+html::-webkit-scrollbar {
+    display: none;
+}
